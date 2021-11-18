@@ -162,7 +162,7 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
             }
 
         case "getRecordPermissionState":
-            result(recorderController.getRecordPermissionState)
+            result(recorderController.getRecordPermissionState())
 
         case "getRecorderIsRecording":
             result(recorderController.isRecording)

@@ -9,8 +9,8 @@ class CarbonvoiceAudio {
   // ------------------------------ Start --------------------------------------
 
   // Call this before any other method
-  static Future<Map<String, String>> setSessionActive(bool active) async {
-    final Map<String, String> result =
+  static Future<Map<Object?, Object?>> setSessionActive(bool active) async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('setSessionActive', {'active': active});
     return result;
   }
@@ -65,8 +65,8 @@ class CarbonvoiceAudio {
   */
 
   // Call this right after setSessionActive, example: "soloAmbient"
-  static Future<Map<String, String>> setSessionCategory(String category) async {
-    final Map<String, String> result =
+  static Future<Map<Object?, Object?>> setSessionCategory(String category) async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('setSessionCategory', {'category': category});
     return result;
   }
@@ -260,38 +260,38 @@ class CarbonvoiceAudio {
     return isPlaying;
   }
 
-  static Future<Map<String, String>> setPlayerPlaybackSpeed(double playbackSpeed) async {
-    final Map<String, String> result =
+  static Future<Map<Object?, Object?>> setPlayerPlaybackSpeed(double playbackSpeed) async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('setPlayerPlaybackSpeed', {'playbackSpeed': playbackSpeed});
     return result;
   }
 
-  static Future<Map<String, String>> get pausePlayer async {
-    final Map<String, String> result =
+  static Future<Map<Object?, Object?>> get pausePlayer async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('pausePlayer');
     return result;
   }
 
-  static Future<Map<String, String>> get resumePlayer async {
-    final Map<String, String> result =
+  static Future<Map<Object?, Object?>> get resumePlayer async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('resumePlayer');
     return result;
   }
 
-  static Future<Map<String, String>> seekPlayer(double percentage) async {
-    final Map<String, String> result =
+  static Future<Map<Object?, Object?>> seekPlayer(double percentage) async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('seekPlayer', {'percentage': percentage});
     return result;
   }
 
-  static Future<Map<String, String>> rewindPlayer(double seconds) async {
-    final Map<String, String> result =
+  static Future<Map<Object?, Object?>> rewindPlayer(double seconds) async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('rewindPlayer', {'seconds': seconds});
     return result;
   }
 
-  static Future<Map<String, String>> playPlayer(String url, double rate, double position) async {
-    final Map<String, String> result =
+  static Future<Map<Object?, Object?>> playPlayer(String url, double rate, double position) async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('playPlayer', {'url': url, 'rate': rate, 'position': position});
     return result;
   }
@@ -299,8 +299,8 @@ class CarbonvoiceAudio {
   // -------------------------- Audio Recorder ---------------------------------
 
   // Call this before calling any recording methods
-  static Future<Map<String, String>> get requestRecordPermission async {
-    final Map<String, String> result =
+  static Future<Map<Object?, Object?>> get requestRecordPermission async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('requestRecordPermission');
     return result;
   }
@@ -324,33 +324,41 @@ class CarbonvoiceAudio {
     return isSessionActive;
   }
 
-  static Future<Map<String, String>> get startRecordingSession async {
-    final Map<String, String> result =
+  static Future<Map<Object?, Object?>> get startRecordingSession async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('startRecordingSession');
     return result;
   }
 
-  static Future<Map<String, String>> get pauseRecording async {
-    final Map<String, String> result =
+  static Future<Map<Object?, Object?>> get pauseRecording async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('pauseRecording');
     return result;
   }
 
-  static Future<Map<String, String>> get resumeRecording async {
-    final Map<String, String> result =
+  static Future<Map<Object?, Object?>> get resumeRecording async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('resumeRecording');
     return result;
   }
 
-  static Future<Map<String, String>> get deleteRecordingSession async {
-    final Map<String, String> result =
+  static Future<Map<Object?, Object?>> get deleteRecordingSession async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('deleteRecordingSession');
     return result;
   }
 
-  // If success: returns "success" object, and inside: the url, transcription and recordedTimeInMilliseconds
-  static Future<Map<String, String>> get endRecordingSession async {
-    final Map<String, String> result =
+  /*
+  ["success": ["url": audioRecordingResult.url.absoluteURL,
+               "transcription": transcription,
+               "recordedTimeInMilliseconds": audioRecordingResult.recordedTimeInMilliseconds]
+
+               or
+
+  ["error": "Failed to end recording session"]
+  */
+  static Future<Map<Object?, Object?>> get endRecordingSession async {
+    final Map<Object?, Object?> result =
         await _channel.invokeMethod('endRecordingSession');
     return result;
   }

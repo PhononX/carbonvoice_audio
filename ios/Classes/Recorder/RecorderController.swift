@@ -16,7 +16,7 @@ protocol RecorderControllerProtocol {
     var isSessionActive: Bool { get }
     var isRecording: Bool { get }
     func requestRecordPermission(completion: @escaping (Bool) -> Void)
-    func getRecordPermissionState() -> String?
+    func getRecordPermissionState() -> String
     func startRecordingSession() throws
     func pauseRecording()
     func resumeRecording()
@@ -99,7 +99,7 @@ extension RecorderController: RecorderControllerProtocol {
         }
     }
 
-    func getRecordPermissionState() -> String? {
+    func getRecordPermissionState() -> String {
         switch AVAudioSession.sharedInstance().recordPermission {
         case .undetermined:
             return "undetermined"
@@ -107,8 +107,8 @@ extension RecorderController: RecorderControllerProtocol {
             return "denied"
         case .granted:
             return "granted"
-        @unknown default:
-            return nil
+        default:
+            return ""
         }
     }
 
