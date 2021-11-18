@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Record Permission State: $_result\n'),
+          child: Text('Play Piano Sound: $_result\n'),
         ),
       ),
     );
