@@ -36,6 +36,11 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
 
+            // MARK: - Start
+
+        case "getHello":
+            result("hello")
+
             // MARK: - AudioController
 
         case "getCurrentInputPortName":
@@ -55,29 +60,29 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
 
         case "setSessionActive":
             guard let arguments = call.arguments as? [String: Any], let active = arguments["active"] as? Bool else {
-                result(FlutterError(code: "", message: "missing arguments for setSessionActive", details: nil))
+                result(["error": "missing arguments for setSessionActive"])
                 return
             }
             audioController.setSessionActive(active) { swiftResult in
                 switch swiftResult {
                 case .success:
-                    result("success")
+                    result(["success": "true"])
                 case .failure(let error):
-                    result(FlutterError(code: "", message: error.localizedDescription, details: nil))
+                    result(["error": error.localizedDescription])
                 }
             }
 
         case "setSessionCategory":
             guard let arguments = call.arguments as? [String: Any], let category = arguments["category"] as? String else {
-                result(FlutterError(code: "", message: "missing arguments for setSessionCategory", details: nil))
+                result(["error": "missing arguments for setSessionCategory"])
                 return
             }
             audioController.setSessionCategory(category) { swiftResult in
                 switch swiftResult {
                 case .success:
-                    result("success")
+                    result(["success": "true"])
                 case .failure(let error):
-                    result(FlutterError(code: "", message: error.localizedDescription, details: nil))
+                    result(["error": error.localizedDescription])
                 }
             }
 
@@ -90,58 +95,58 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
             result(playerController.isPlaying)
 
         case "setPlayerPlaybackSpeed":
-            guard let arguments = call.arguments as? [String: Any], let playbackSpeed = arguments["playbackSpeed"] as? Float else {
-                result(FlutterError(code: "", message: "missing arguments for setPlayerPlaybackSpeed", details: nil))
+            guard let arguments = call.arguments as? [String: Any], let playbackSpeed = arguments["playbackSpeed"] as? Double else {
+                result(["error": "missing arguments for setPlayerPlaybackSpeed"])
                 return
             }
             playerController.setPlaybackSpeed(playbackSpeed)
-            result("success")
+            result(["success": "true"])
 
         case "pausePlayer":
             playerController.pause()
-            result("success")
+            result(["success": "true"])
 
         case "resumePlayer":
             playerController.resume()
-            result("success")
+            result(["success": "true"])
 
         case "seekPlayer":
-            guard let arguments = call.arguments as? [String: Any], let percentage = arguments["percentage"] as? Float else {
-                result(FlutterError(code: "", message: "missing arguments for seekPlayer", details: nil))
+            guard let arguments = call.arguments as? [String: Any], let percentage = arguments["percentage"] as? Double else {
+                result(["error": "missing arguments for seekPlayer"])
                 return
             }
             playerController.seek(to: percentage)
-            result("success")
+            result(["success": "true"])
 
         case "rewindPlayer":
             guard let arguments = call.arguments as? [String: Any], let seconds = arguments["seconds"] as? Double else {
-                result(FlutterError(code: "", message: "missing arguments for rewindPlayer", details: nil))
+                result(["error": "missing arguments for rewindPlayer"])
                 return
             }
             playerController.rewind(seconds: seconds)
-            result("success")
+            result(["success": "true"])
 
         case "playPlayer":
             guard
                 let arguments = call.arguments as? [String: Any],
                 let urlString = arguments["url"] as? String,
-                let rate = arguments["rate"] as? Float,
-                let position = arguments["position"] as? Float else {
-                result(FlutterError(code: "", message: "missing arguments for playPlayer", details: nil))
+                let rate = arguments["rate"] as? Double,
+                let position = arguments["position"] as? Double else {
+                    result(["error": "missing arguments for playPlayer"])
                 return
             }
 
             guard let url = URL(string: urlString) else {
-                result(FlutterError(code: "", message: "invalid URL", details: nil))
+                result(["error": "invalid URL"])
                 return
             }
 
             playerController.play(url: url, rate: rate, position: position) { swiftResult in
                 switch swiftResult {
                 case .success:
-                    result("success")
+                    result(["success": "true"])
                 case .failure(let error):
-                    result(FlutterError(code: "", message: error.localizedDescription, details: nil))
+                    result(["error": error.localizedDescription])
                 }
             }
 
@@ -150,11 +155,14 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
         case "requestRecordPermission":
             recorderController.requestRecordPermission { granted in
                 if granted {
-                    result("success")
+                    result(["success": "true"])
                 } else {
-                    result(FlutterError(code: "", message: "User denied record permission request", details: nil))
+                    result(["error": "User denied record permission request"])
                 }
             }
+
+        case "getRecordPermissionState":
+            result(recorderController.getRecordPermissionState)
 
         case "getRecorderIsRecording":
             result(recorderController.isRecording)
@@ -165,27 +173,27 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
         case "startRecordingSession":
             do {
                 try recorderController.startRecordingSession()
-                result("success")
+                result(["success": "true"])
             } catch {
-                result(FlutterError(code: "", message: error.localizedDescription, details: nil))
+                result(["error": error.localizedDescription])
             }
 
         case "pauseRecording":
             recorderController.pauseRecording()
-            result("success")
+            result(["success": "true"])
 
         case "resumeRecording":
             recorderController.resumeRecording()
-            result("success")
+            result(["success": "true"])
 
         case "deleteRecordingSession":
             recorderController.deleteRecordingSession()
-            result("success")
+            result(["success": "true"])
 
         case "endRecordingSession":
             recorderController.endRecordingSession { audioRecordingResult in
                 guard let audioRecordingResult = audioRecordingResult else {
-                    result(FlutterError(code: "", message: "Failed to end recording session", details: nil))
+                    result(["error": "Failed to end recording session"])
                     return
                 }
 
@@ -204,7 +212,7 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
             }
 
         default:
-            result(FlutterError(code: "", message: "method call not supported: \(call.method)", details: nil))
+            result(["error": "method call not supported: \(call.method)"])
         }
     }
 }
@@ -256,13 +264,13 @@ extension SwiftCarbonvoiceAudioPlugin: AudioControllerDelegate {
 // MARK: - PlayerControllerDelegate
 
 extension SwiftCarbonvoiceAudioPlugin: PlayerControllerDelegate {
-    func timelineDidChange(timePlayed: String, timeRemaining: String, percentage: Float) {
+    func timelineDidChange(timePlayed: String, timeRemaining: String, percentage: Double) {
         eventSink?(["timelineDidChange": ["timePlayed": timePlayed,
                                           "timeRemaining": timeRemaining,
                                           "percentage": percentage]])
     }
 
-    func millisecondsHeardDidChange(milliseconds: Int, percentage: Float) {
+    func millisecondsHeardDidChange(milliseconds: Int, percentage: Double) {
         eventSink?(["millisecondsHeardDidChange": ["milliseconds": milliseconds,
                                                    "percentage": percentage]])
     }

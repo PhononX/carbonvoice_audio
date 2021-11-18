@@ -13,20 +13,20 @@ import AVKit
 protocol PlayerControllerProtocol {
     var delegate: PlayerControllerDelegate? { get set }
     var isPlaying: Bool { get }
-    func play(url: URL, rate: Float, position: Float, readyToPlay: @escaping (Result<Void, Error>) -> Void)
+    func play(url: URL, rate: Double, position: Double, readyToPlay: @escaping (Result<Void, Error>) -> Void)
     func pause()
     func resume()
-    func seek(to percentage: Float)
+    func seek(to percentage: Double)
     func rewind(seconds: Double)
-    func setPlaybackSpeed(_ playbackSpeed: Float)
+    func setPlaybackSpeed(_ playbackSpeed: Double)
     func getCurrentTimeInSeconds() -> Double?
 }
 
 // MARK: - Output (callbacks)
 
 protocol PlayerControllerDelegate: AnyObject {
-    func timelineDidChange(timePlayed: String, timeRemaining: String, percentage: Float)
-    func millisecondsHeardDidChange(milliseconds: Int, percentage: Float)
+    func timelineDidChange(timePlayed: String, timeRemaining: String, percentage: Double)
+    func millisecondsHeardDidChange(milliseconds: Int, percentage: Double)
     func playerDidFinishPlaying()
 }
 
@@ -69,7 +69,7 @@ extension PlayerController: PlayerControllerProtocol {
         playerController?.player?.timeControlStatus == .playing
     }
 
-    func play(url: URL, rate: Float, position: Float, readyToPlay: @escaping (Result<Void, Error>) -> Void) {
+    func play(url: URL, rate: Double, position: Double, readyToPlay: @escaping (Result<Void, Error>) -> Void) {
         // Pause current player if needed
         playerController?.player?.pause()
 
@@ -96,7 +96,7 @@ extension PlayerController: PlayerControllerProtocol {
                   let item = player.currentItem
             else { return }
 
-            let percentage = Float(player.currentTime().seconds / item.asset.duration.seconds)
+            let percentage = Double(player.currentTime().seconds / item.asset.duration.seconds)
 
             // Update Timeline
             let remaining = item.asset.duration - player.currentTime()
@@ -116,7 +116,7 @@ extension PlayerController: PlayerControllerProtocol {
 
             let milliseconds = Int(player.currentTime().seconds * 1000)
 
-            let percentage = Float(player.currentTime().seconds / item.asset.duration.seconds)
+            let percentage = Double(player.currentTime().seconds / item.asset.duration.seconds)
 
             guard percentage > 0 && percentage <= 100 else { return }
 
@@ -129,7 +129,7 @@ extension PlayerController: PlayerControllerProtocol {
             if playerItem.status == .readyToPlay {
                 self.seek(to: position)
                 self.playerController?.player?.play()
-                self.playerController?.player?.rate = rate
+                self.playerController?.player?.rate = Float(rate)
                 readyToPlay(.success(Void()))
             }
         })
@@ -143,13 +143,13 @@ extension PlayerController: PlayerControllerProtocol {
         playerController?.player?.play()
     }
 
-    func seek(to percentage: Float) {
+    func seek(to percentage: Double) {
         guard let player = playerController?.player,
               let currentReplyDuration = player.currentItem?.duration.seconds,
               !currentReplyDuration.isNaN,
               !currentReplyDuration.isInfinite
         else { return }
-        let newTimeMS = Int64(percentage * Float(currentReplyDuration * 1000))
+        let newTimeMS = Int64(percentage * Double(currentReplyDuration * 1000))
         let newTime = CMTimeMake(value: newTimeMS, timescale: 1000)
         player.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
     }
@@ -166,14 +166,14 @@ extension PlayerController: PlayerControllerProtocol {
         return playerController?.player?.currentTime().seconds
     }
 
-    func setPlaybackSpeed(_ playbackSpeed: Float) {
+    func setPlaybackSpeed(_ playbackSpeed: Double) {
         let isPlaying = playerController?.player?.timeControlStatus == .playing
 
         if isPlaying {
             playerController?.player?.play()
-            playerController?.player?.rate = playbackSpeed
+            playerController?.player?.rate = Float(playbackSpeed)
         } else {
-            playerController?.player?.rate = playbackSpeed
+            playerController?.player?.rate = Float(playbackSpeed)
             playerController?.player?.pause()
         }
     }
