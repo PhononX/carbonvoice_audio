@@ -6,23 +6,6 @@ import 'package:flutter/services.dart';
 class CarbonvoiceAudio {
   static const MethodChannel _channel = MethodChannel('carbonvoice_audio');
 
-  // ------------------------------ Start --------------------------------------
-
-  // Call this before any other method
-  static Future<Map<Object?, Object?>> setSessionActive(bool active) async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('setSessionActive', {'active': active});
-    return result;
-  }
-
-
-  // Test method
-  static Future<String?> get getHello async {
-    final String? result =
-        await _channel.invokeMethod('getHello');
-    return result;
-  }
-
   // -------------------------- Session Categories -----------------------------
 
   /*
@@ -76,6 +59,13 @@ class CarbonvoiceAudio {
     final String? categoryName =
         await _channel.invokeMethod('getCurrentSessionCategoryName');
     return categoryName;
+  }
+
+  // Call this right after setting the session category
+  static Future<Map<Object?, Object?>> setSessionActive(bool active) async {
+    final Map<Object?, Object?> result =
+        await _channel.invokeMethod('setSessionActive', {'active': active});
+    return result;
   }
 
 

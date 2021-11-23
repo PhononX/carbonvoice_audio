@@ -1,6 +1,5 @@
 import Flutter
-import UIKit
-import AVFAudio
+import CarbonVoiceAudio
 
 public class SwiftCarbonvoiceAudioPlugin: NSObject {
 
@@ -245,18 +244,18 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterStreamHandler {
 // MARK: - AudioControllerDelegate
 
 extension SwiftCarbonvoiceAudioPlugin: AudioControllerDelegate {
-    func routeDidChange(inputPortName: String?, inputPortType: String?, outputPortName: String?, outputPortType: String?) {
+    public func routeDidChange(inputPortName: String?, inputPortType: String?, outputPortName: String?, outputPortType: String?) {
         eventSink?(["routeDidChange": ["inputPortName": inputPortName,
                                        "inputPortType": inputPortType,
                                        "outputPortName": outputPortName,
                                        "outputPortType": outputPortType]])
     }
 
-    func interruptionStarted() {
+    public func interruptionStarted() {
         eventSink?("interruptionStarted")
     }
 
-    func interruptionEnded() {
+    public func interruptionEnded() {
         eventSink?("interruptionEnded")
     }
 }
@@ -264,18 +263,18 @@ extension SwiftCarbonvoiceAudioPlugin: AudioControllerDelegate {
 // MARK: - PlayerControllerDelegate
 
 extension SwiftCarbonvoiceAudioPlugin: PlayerControllerDelegate {
-    func timelineDidChange(timePlayed: String, timeRemaining: String, percentage: Double) {
+    public func timelineDidChange(timePlayed: String, timeRemaining: String, percentage: Double) {
         eventSink?(["timelineDidChange": ["timePlayed": timePlayed,
                                           "timeRemaining": timeRemaining,
                                           "percentage": percentage]])
     }
 
-    func millisecondsHeardDidChange(milliseconds: Int, percentage: Double) {
+    public func millisecondsHeardDidChange(milliseconds: Int, percentage: Double) {
         eventSink?(["millisecondsHeardDidChange": ["milliseconds": milliseconds,
                                                    "percentage": percentage]])
     }
 
-    func playerDidFinishPlaying() {
+    public func playerDidFinishPlaying() {
         eventSink?("playerDidFinishPlaying")
     }
 }
@@ -283,7 +282,7 @@ extension SwiftCarbonvoiceAudioPlugin: PlayerControllerDelegate {
 // MARK: - RecorderControllerDelegate
 
 extension SwiftCarbonvoiceAudioPlugin: RecorderControllerDelegate {
-    func recordedTimeDidChange(secondsRecorded: Int) {
+    public func recordedTimeDidChange(secondsRecorded: Int) {
         eventSink?(["recordedTimeDidChange": ["secondsRecorded": secondsRecorded]])
     }
 }

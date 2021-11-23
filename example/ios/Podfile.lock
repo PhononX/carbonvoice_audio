@@ -1,11 +1,17 @@
 PODS:
   - carbonvoice_audio (0.0.1):
+    - CarbonVoiceAudio
     - Flutter
+  - CarbonVoiceAudio (1.0.0)
   - Flutter (1.0.0)
 
 DEPENDENCIES:
   - carbonvoice_audio (from `.symlinks/plugins/carbonvoice_audio/ios`)
   - Flutter (from `Flutter`)
+
+SPEC REPOS:
+  trunk:
+    - CarbonVoiceAudio
 
 EXTERNAL SOURCES:
   carbonvoice_audio:
@@ -14,7 +20,8 @@ EXTERNAL SOURCES:
     :path: Flutter
 
 SPEC CHECKSUMS:
-  carbonvoice_audio: 52f8a531b1515a0206850cd2c1ef5742751b6d67
+  carbonvoice_audio: 6902f73e3773c993c8d4af1374a2480c63998abf
+  CarbonVoiceAudio: 30ae297d1e3fe54c0271d963d4c380bd7c70fb98
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
 
 PODFILE CHECKSUM: 7368163408c647b7eb699d0d788ba6718e18fb8d
