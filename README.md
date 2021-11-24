@@ -1,6 +1,8 @@
 # carbonvoice_audio
 
-A new flutter plugin project.
+Flutter audio plugin
+
+https://pub.dev/packages/carbonvoice_audio
 
 ## Getting Started
 
