@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'carbonvoice_audio'
-  s.version          = '0.0.1'
+  s.version          = '1.0.2'
   s.summary          = 'Flutter audio plugin'
   s.description      = 'Flutter audio plugin interface'
   s.homepage         = 'https://github.com/PhononX/carbonvoice_audio'
@@ -13,8 +13,8 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'CarbonVoiceAudio'
-  s.platform = :ios, '10.0'
+  s.dependency 'CarbonVoiceAudio', '~> 1.0.1'
+  s.platform = :ios, '11.0'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

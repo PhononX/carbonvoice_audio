@@ -35,11 +35,6 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
 
-            // MARK: - Start
-
-        case "getHello":
-            result("hello")
-
             // MARK: - AudioController
 
         case "getCurrentInputPortName":
@@ -84,6 +79,10 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
                     result(["error": error.localizedDescription])
                 }
             }
+
+        case "showRoutePickerView":
+            audioController.showRoutePickerView()
+            result(["success": "true"])
 
             // MARK: - PlayerController
 

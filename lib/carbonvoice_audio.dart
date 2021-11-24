@@ -68,7 +68,13 @@ class CarbonvoiceAudio {
     return result;
   }
 
+  static Future<Map<Object?, Object?>> get showRoutePickerView async {
+    final Map<Object?, Object?> result =
+        await _channel.invokeMethod('showRoutePickerView');
+    return result;
+  }
 
+  
 
 
   // ---------------------------- Port Names -----------------------------------
