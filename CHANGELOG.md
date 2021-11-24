@@ -1,3 +1,3 @@
-## 1.0.0
+## 1.0.1
 
-* Initial release.
+* Adds more examples for how to play and record

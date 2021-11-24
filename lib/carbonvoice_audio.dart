@@ -280,6 +280,7 @@ class CarbonvoiceAudio {
     return result;
   }
 
+  // Play sound with url, speed (1.0, 1.5, 2.0, 3.0), position (0 -> 1)
   static Future<Map<Object?, Object?>> playPlayer(String url, double rate, double position) async {
     final Map<Object?, Object?> result =
         await _channel.invokeMethod('playPlayer', {'url': url, 'rate': rate, 'position': position});
@@ -295,7 +296,7 @@ class CarbonvoiceAudio {
     return result;
   }
 
-  // Returns undetermined, denied or granted, currently crashing (?)
+  // Returns undetermined, denied or granted
   static Future<String?> get getRecordPermissionState async {
     final String? recordPermissionState =
         await _channel.invokeMethod('getRecordPermissionState');
