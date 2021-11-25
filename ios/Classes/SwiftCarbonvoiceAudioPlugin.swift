@@ -84,6 +84,10 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
             audioController.showRoutePickerView()
             result(["success": "true"])
 
+        case "setPrefersNoInterruptionsFromSystemAlerts":
+            audioController.setPrefersNoInterruptionsFromSystemAlerts()
+            result(["success": "true"])
+
             // MARK: - PlayerController
 
         case "getPlayerCurrentTimeInSeconds":

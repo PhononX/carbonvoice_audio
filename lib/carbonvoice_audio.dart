@@ -74,6 +74,12 @@ class CarbonvoiceAudio {
     return result;
   }
 
+static Future<Map<Object?, Object?>> get setPrefersNoInterruptionsFromSystemAlerts async {
+    final Map<Object?, Object?> result =
+        await _channel.invokeMethod('setPrefersNoInterruptionsFromSystemAlerts');
+    return result;
+  }
+
   
 
 

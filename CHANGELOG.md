@@ -1,3 +1,11 @@
+## 1.0.4
+
+* Adds setPrefersNoInterruptionsFromSystemAlerts method to dart
+
+## 1.0.3
+
+* Adds setPrefersNoInterruptionsFromSystemAlerts method
+
 ## 1.0.2
 
 * Adds showRoutePickerView method
