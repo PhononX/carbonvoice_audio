@@ -21,7 +21,7 @@ Update CHANGELOG.md with release notes
 
 Update pubspec.yaml with release number
 
-Update /ios/carbonvoice_audio.podspec with release number
+Update /ios/carbonvoice_audio.podspec with release number (also if there were any changes on the external ios library)
 
 Check for warnings before publishing
 `flutter pub publish --dry-run`

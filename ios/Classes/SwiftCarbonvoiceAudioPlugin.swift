@@ -85,8 +85,18 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
             result(["success": "true"])
 
         case "setPrefersNoInterruptionsFromSystemAlerts":
-            audioController.setPrefersNoInterruptionsFromSystemAlerts()
-            result(["success": "true"])
+            guard let arguments = call.arguments as? [String: Any], let inValue = arguments["inValue"] as? Bool else {
+                result(["error": "missing arguments for setSessionCategory"])
+                return
+            }
+            audioController.setPrefersNoInterruptionsFromSystemAlerts(inValue) { swiftResult in
+                switch swiftResult {
+                case .success:
+                    result(["success": "true"])
+                case .failure(let error):
+                    result(["error": error.localizedDescription])
+                }
+            }
 
             // MARK: - PlayerController
 

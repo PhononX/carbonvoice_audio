@@ -1,3 +1,7 @@
+## 1.0.5
+
+* Fixes setPrefersNoInterruptionsFromSystemAlerts method
+
 ## 1.0.4
 
 * Adds setPrefersNoInterruptionsFromSystemAlerts method to dart

@@ -6,9 +6,6 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:carbonvoice_audio/carbonvoice_audio.dart';
 
-import '../../lib/carbonvoice_audio.dart';
-import '../../lib/carbonvoice_audio.dart';
-
 void main() {
   runApp(const MyApp());
 }
