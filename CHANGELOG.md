@@ -1,3 +1,7 @@
+## 1.0.8
+
+* Fixes typo
+
 ## 1.0.7
 
 * Adds more business logic

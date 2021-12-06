@@ -1,6 +1,6 @@
 name: carbonvoice_audio
 description: A new flutter plugin project.
-version: 1.0.7
+version: 1.0.8
 homepage: "https://github.com/PhononX/carbonvoice_audio"
 
 environment:

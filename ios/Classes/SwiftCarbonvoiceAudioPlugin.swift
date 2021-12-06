@@ -145,9 +145,9 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
         case "getRecorderIsRecording":
             result(recorderController.isRecording)
 
-        case "startOrResumeRecordingSession":
+        case "startOrResumeRecording":
             do {
-                try recorderController.startOrResumeRecordingSession()
+                try recorderController.startOrResumeRecording()
                 result(["success": "true"])
             } catch {
                 result(["error": error.localizedDescription])

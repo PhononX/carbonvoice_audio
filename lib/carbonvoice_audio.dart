@@ -321,9 +321,9 @@ class CarbonvoiceAudio {
     return isRecording;
   }
 
-  static Future<Map<Object?, Object?>> get startOrResumeRecordingSession async {
+  static Future<Map<Object?, Object?>> get startOrResumeRecording async {
     final Map<Object?, Object?> result =
-        await _channel.invokeMethod('startOrResumeRecordingSession');
+        await _channel.invokeMethod('startOrResumeRecording');
     return result;
   }
 

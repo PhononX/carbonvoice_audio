@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
     if (recordPermissionState == "granted") {
       // Try to start recording
       Map<Object?, Object?> startRecordingSessionResult =
-          await CarbonvoiceAudio.startOrResumeRecordingSession;
+          await CarbonvoiceAudio.startOrResumeRecording;
 
       if (startRecordingSessionResult.containsKey("success")) {
         // Recording...
@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
       if (requestRecordPermissionResult.containsKey("success")) {
         // Try to start recording
         Map<Object?, Object?> startRecordingSessionResult =
-            await CarbonvoiceAudio.startOrResumeRecordingSession;
+            await CarbonvoiceAudio.startOrResumeRecording;
 
         if (startRecordingSessionResult.containsKey("success")) {
           // Recording...
