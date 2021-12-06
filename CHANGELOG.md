@@ -1,3 +1,11 @@
+## 1.0.7
+
+* Adds more business logic
+
+## 1.0.6
+
+* Adds setPrefersNoInterruptionsFromSystemAlerts method back
+
 ## 1.0.5
 
 * Fixes setPrefersNoInterruptionsFromSystemAlerts method

@@ -52,34 +52,6 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
         case "getCurrentSessionCategoryName":
             result(audioController.getCurrentSessionCategoryName() ?? nil)
 
-        case "setSessionActive":
-            guard let arguments = call.arguments as? [String: Any], let active = arguments["active"] as? Bool else {
-                result(["error": "missing arguments for setSessionActive"])
-                return
-            }
-            audioController.setSessionActive(active) { swiftResult in
-                switch swiftResult {
-                case .success:
-                    result(["success": "true"])
-                case .failure(let error):
-                    result(["error": error.localizedDescription])
-                }
-            }
-
-        case "setSessionCategory":
-            guard let arguments = call.arguments as? [String: Any], let category = arguments["category"] as? String else {
-                result(["error": "missing arguments for setSessionCategory"])
-                return
-            }
-            audioController.setSessionCategory(category) { swiftResult in
-                switch swiftResult {
-                case .success:
-                    result(["success": "true"])
-                case .failure(let error):
-                    result(["error": error.localizedDescription])
-                }
-            }
-
         case "showRoutePickerView":
             audioController.showRoutePickerView()
             result(["success": "true"])
@@ -89,14 +61,8 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
                 result(["error": "missing arguments for setSessionCategory"])
                 return
             }
-            audioController.setPrefersNoInterruptionsFromSystemAlerts(inValue) { swiftResult in
-                switch swiftResult {
-                case .success:
-                    result(["success": "true"])
-                case .failure(let error):
-                    result(["error": error.localizedDescription])
-                }
-            }
+            audioController.setPrefersNoInterruptionsFromSystemAlerts(inValue)
+            result(["success": "true"])
 
             // MARK: - PlayerController
 
@@ -179,12 +145,9 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
         case "getRecorderIsRecording":
             result(recorderController.isRecording)
 
-        case "getRecorderIsSessionActive":
-            result(recorderController.isSessionActive)
-
-        case "startRecordingSession":
+        case "startOrResumeRecordingSession":
             do {
-                try recorderController.startRecordingSession()
+                try recorderController.startOrResumeRecordingSession()
                 result(["success": "true"])
             } catch {
                 result(["error": error.localizedDescription])
@@ -192,10 +155,6 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
 
         case "pauseRecording":
             recorderController.pauseRecording()
-            result(["success": "true"])
-
-        case "resumeRecording":
-            recorderController.resumeRecording()
             result(["success": "true"])
 
         case "deleteRecordingSession":

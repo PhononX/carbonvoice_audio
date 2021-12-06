@@ -41,21 +41,14 @@ class _MyAppState extends State<MyApp> {
   Future<void> startRecording() async {
     if (!mounted) return;
 
-    // Set session category
-    await CarbonvoiceAudio.setSessionCategory("playAndRecord");
-
-    // Set session active
-    await CarbonvoiceAudio.setSessionActive(true);
-
     // Check recording permissions
     String? recordPermissionState =
         await CarbonvoiceAudio.getRecordPermissionState;
 
     if (recordPermissionState == "granted") {
-
       // Try to start recording
       Map<Object?, Object?> startRecordingSessionResult =
-          await CarbonvoiceAudio.startRecordingSession;
+          await CarbonvoiceAudio.startOrResumeRecordingSession;
 
       if (startRecordingSessionResult.containsKey("success")) {
         // Recording...
@@ -69,10 +62,9 @@ class _MyAppState extends State<MyApp> {
           await CarbonvoiceAudio.requestRecordPermission;
 
       if (requestRecordPermissionResult.containsKey("success")) {
-
         // Try to start recording
         Map<Object?, Object?> startRecordingSessionResult =
-            await CarbonvoiceAudio.startRecordingSession;
+            await CarbonvoiceAudio.startOrResumeRecordingSession;
 
         if (startRecordingSessionResult.containsKey("success")) {
           // Recording...
@@ -99,10 +91,12 @@ class _MyAppState extends State<MyApp> {
   Future<void> endRecording() async {
     if (!mounted) return;
 
-    Map<Object?, Object?> endRecordingSessionResult = await CarbonvoiceAudio.endRecordingSession;
+    Map<Object?, Object?> endRecordingSessionResult =
+        await CarbonvoiceAudio.endRecordingSession;
 
     setState(() {
-      _result = endRecordingSessionResult.toString();;
+      _result = endRecordingSessionResult.toString();
+      ;
     });
   }
 
