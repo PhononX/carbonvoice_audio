@@ -157,10 +157,6 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
             recorderController.pauseRecording()
             result(["success": "true"])
 
-        case "deleteRecordingSession":
-            recorderController.deleteRecordingSession()
-            result(["success": "true"])
-
         case "endRecordingSession":
             recorderController.endRecordingSession { audioRecordingResult in
                 guard let audioRecordingResult = audioRecordingResult else {

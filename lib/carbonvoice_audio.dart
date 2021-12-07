@@ -333,12 +333,6 @@ class CarbonvoiceAudio {
     return result;
   }
 
-  static Future<Map<Object?, Object?>> get deleteRecordingSession async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('deleteRecordingSession');
-    return result;
-  }
-
   /*
   ["success": ["url": audioRecordingResult.url.absoluteURL,
                "transcription": transcription,
