@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Fixes recorder controller speech recognition
+
 ## 1.0.9
 
 * More fixes
