@@ -1,3 +1,6 @@
+## 1.1.1
+* Adds web platform
+
 ## 1.1.0
 
 * Fixes recorder controller speech recognition
