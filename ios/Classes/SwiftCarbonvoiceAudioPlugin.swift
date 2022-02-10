@@ -24,10 +24,11 @@ public class SwiftCarbonvoiceAudioPlugin: NSObject {
 
 extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
 
-    private static let channelName: String = "carbonvoice_audio"
+    private static let channelMethodName: String = "carbonvoice_audio"
+    private static let channelEventName: String = "carbonvoice_audio_event"
 
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
+        let channel = FlutterMethodChannel(name: channelMethodName, binaryMessenger: registrar.messenger())
         let instance = SwiftCarbonvoiceAudioPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
@@ -192,7 +193,7 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterStreamHandler {
             fatalError("rootViewController is not type FlutterViewController")
         }
 
-        let notificationChannel = FlutterEventChannel(name: SwiftCarbonvoiceAudioPlugin.channelName,
+        let notificationChannel = FlutterEventChannel(name: SwiftCarbonvoiceAudioPlugin.channelEventName,
                                                       binaryMessenger: controller.binaryMessenger)
 
         notificationChannel.setStreamHandler(self)

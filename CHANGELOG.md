@@ -1,3 +1,6 @@
+## 1.1.2
+* Fix the audio input notification event
+
 ## 1.1.1
 * Adds web platform
 
