@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:flutter/services.dart';
 
@@ -49,39 +48,31 @@ class CarbonvoiceAudio {
 
   // Call this right after setSessionActive, example: "soloAmbient"
   static Future<Map<Object?, Object?>> setSessionCategory(String category) async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('setSessionCategory', {'category': category});
+    final Map<Object?, Object?> result = await _channel.invokeMethod('setSessionCategory', {'category': category});
     return result;
   }
 
   // Example: "soloAmbient"
   static Future<String?> get getCurrentSessionCategoryName async {
-    final String? categoryName =
-        await _channel.invokeMethod('getCurrentSessionCategoryName');
+    final String? categoryName = await _channel.invokeMethod('getCurrentSessionCategoryName');
     return categoryName;
   }
 
   // Call this right after setting the session category
   static Future<Map<Object?, Object?>> setSessionActive(bool active) async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('setSessionActive', {'active': active});
+    final Map<Object?, Object?> result = await _channel.invokeMethod('setSessionActive', {'active': active});
     return result;
   }
 
   static Future<Map<Object?, Object?>> get showRoutePickerView async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('showRoutePickerView');
+    final Map<Object?, Object?> result = await _channel.invokeMethod('showRoutePickerView');
     return result;
   }
 
   static Future<Map<Object?, Object?>> setPrefersNoInterruptionsFromSystemAlerts(bool inValue) async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('setPrefersNoInterruptionsFromSystemAlerts', {'inValue': inValue});
+    final Map<Object?, Object?> result = await _channel.invokeMethod('setPrefersNoInterruptionsFromSystemAlerts', {'inValue': inValue});
     return result;
   }
-
-  
-
 
   // ---------------------------- Port Names -----------------------------------
 
@@ -169,133 +160,115 @@ class CarbonvoiceAudio {
 */
 
   static Future<String?> get getCurrentInputPortName async {
-    final String? portName =
-        await _channel.invokeMethod('getCurrentInputPortName');
+    final String? portName = await _channel.invokeMethod('getCurrentInputPortName');
     return portName;
   }
 
   static Future<String?> get getCurrentOutputPortName async {
-    final String? portName =
-        await _channel.invokeMethod('getCurrentOutputPortName');
+    final String? portName = await _channel.invokeMethod('getCurrentOutputPortName');
     return portName;
   }
-
-
-
 
   //   --------------------------- Port Types ---------------------------------
 
   /*
     /* input port types */
     /// Line level input on a dock connector
-    
+
     /// Built-in microphone on an iOS device
-    
+
     /// Microphone on a wired headset.  Headset refers to an accessory that has headphone outputs paired with a
     /// microphone.
-    
+
     /* output port types */
-    
+
     /// Line level output on a dock connector
-    
+
     /// Headphone or headset output
-    
+
     /// Output on a Bluetooth A2DP device
-    
+
     /// The speaker you hold to your ear when on a phone call
-    
+
     /// Built-in speaker on an iOS device
-    
+
     /// Output via High-Definition Multimedia Interface
-    
+
     /// Output on a remote Air Play device
-    
+
     /// Output on a Bluetooth Low Energy device
-    
+
     /* port types that refer to either input or output */
-    
+
     /// Input or output on a Bluetooth Hands-Free Profile device
-    
+
     /// Input or output on a Universal Serial Bus device
-    
+
     /// Input or output via Car Audio
-    
+
     /// Input or output that does not correspond to real audio hardware
-    
+
     /// Input or output connected via the PCI (Peripheral Component Interconnect) bus
-    
+
     /// Input or output connected via FireWire
-    
+
     /// Input or output connected via DisplayPort
-    
+
     /// Input or output connected via AVB (Audio Video Bridging)
-    
+
     /// Input or output connected via Thunderbolt
   */
 
   static Future<String?> get getCurrentInputPortType async {
-    final String? portType =
-        await _channel.invokeMethod('getCurrentInputPortName');
+    final String? portType = await _channel.invokeMethod('getCurrentInputPortType');
     return portType;
   }
-  
+
   static Future<String?> get getCurrentOutputPortType async {
-    final String? portType =
-        await _channel.invokeMethod('getCurrentOutputPortType');
+    final String? portType = await _channel.invokeMethod('getCurrentOutputPortType');
     return portType;
   }
-
-
-
 
   // --------------------------- Audio Player ----------------------------------
 
   static Future<double?> get getPlayerCurrentTimeInSeconds async {
-    final double? seconds =
-        await _channel.invokeMethod('getPlayerCurrentTimeInSeconds');
+    final double? seconds = await _channel.invokeMethod('getPlayerCurrentTimeInSeconds');
     return seconds;
   }
 
   static Future<bool?> get getPlayerIsPlaying async {
-    final bool? isPlaying =
-        await _channel.invokeMethod('getPlayerIsPlaying');
+    final bool? isPlaying = await _channel.invokeMethod('getPlayerIsPlaying');
     return isPlaying;
   }
 
   static Future<Map<Object?, Object?>> setPlayerPlaybackSpeed(double playbackSpeed) async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('setPlayerPlaybackSpeed', {'playbackSpeed': playbackSpeed});
+    final Map<Object?, Object?> result = await _channel.invokeMethod('setPlayerPlaybackSpeed', {'playbackSpeed': playbackSpeed});
     return result;
   }
 
   static Future<Map<Object?, Object?>> get pausePlayer async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('pausePlayer');
+    final Map<Object?, Object?> result = await _channel.invokeMethod('pausePlayer');
     return result;
   }
 
   static Future<Map<Object?, Object?>> get resumePlayer async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('resumePlayer');
+    final Map<Object?, Object?> result = await _channel.invokeMethod('resumePlayer');
     return result;
   }
 
   static Future<Map<Object?, Object?>> seekPlayer(double percentage) async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('seekPlayer', {'percentage': percentage});
+    final Map<Object?, Object?> result = await _channel.invokeMethod('seekPlayer', {'percentage': percentage});
     return result;
   }
 
   static Future<Map<Object?, Object?>> rewindPlayer(double seconds) async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('rewindPlayer', {'seconds': seconds});
+    final Map<Object?, Object?> result = await _channel.invokeMethod('rewindPlayer', {'seconds': seconds});
     return result;
   }
 
   // Play sound with url, speed (1.0, 1.5, 2.0, 3.0), position (0 -> 1)
   static Future<Map<Object?, Object?>> playPlayer(String url, double rate, double position) async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('playPlayer', {'url': url, 'rate': rate, 'position': position});
+    final Map<Object?, Object?> result = await _channel.invokeMethod('playPlayer', {'url': url, 'rate': rate, 'position': position});
     return result;
   }
 
@@ -303,33 +276,28 @@ class CarbonvoiceAudio {
 
   // Call this before calling any recording methods
   static Future<Map<Object?, Object?>> get requestRecordPermission async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('requestRecordPermission');
+    final Map<Object?, Object?> result = await _channel.invokeMethod('requestRecordPermission');
     return result;
   }
 
   // Returns undetermined, denied or granted
   static Future<String?> get getRecordPermissionState async {
-    final String? recordPermissionState =
-        await _channel.invokeMethod('getRecordPermissionState');
+    final String? recordPermissionState = await _channel.invokeMethod('getRecordPermissionState');
     return recordPermissionState;
   }
 
   static Future<bool?> get getRecorderIsRecording async {
-    final bool? isRecording =
-        await _channel.invokeMethod('getRecorderIsRecording');
+    final bool? isRecording = await _channel.invokeMethod('getRecorderIsRecording');
     return isRecording;
   }
 
   static Future<Map<Object?, Object?>> get startOrResumeRecording async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('startOrResumeRecording');
+    final Map<Object?, Object?> result = await _channel.invokeMethod('startOrResumeRecording');
     return result;
   }
 
   static Future<Map<Object?, Object?>> get pauseRecording async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('pauseRecording');
+    final Map<Object?, Object?> result = await _channel.invokeMethod('pauseRecording');
     return result;
   }
 
@@ -343,13 +311,9 @@ class CarbonvoiceAudio {
   ["error": "Failed to end recording session"]
   */
   static Future<Map<Object?, Object?>> get endRecordingSession async {
-    final Map<Object?, Object?> result =
-        await _channel.invokeMethod('endRecordingSession');
+    final Map<Object?, Object?> result = await _channel.invokeMethod('endRecordingSession');
     return result;
   }
-
-
-
 
   // -------------------------- Event Listeners --------------------------------
 
