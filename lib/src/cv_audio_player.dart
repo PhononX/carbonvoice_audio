@@ -14,12 +14,12 @@ class CarbonAudioPlayer extends BaseAudioHandler
   Stream<dynamic>? _audioInputStream;
 
   @override
-  AudioPlayerHandler() {
+  CarbonAudioPlayer() {
     initPlayRecordSession(activate: true);
     registerInputChange();
   }
 
-  // The most common callbacks:
+  /// [Player actions]
   Future<void> play() {
     print("MESSAGE AUDIO HANDLER PLAY");
     Set<MediaAction> actions = {MediaAction.seek};
@@ -32,6 +32,7 @@ class CarbonAudioPlayer extends BaseAudioHandler
     return _player.play();
   }
 
+  ///
   Future<void> pause({bool hideControls = false}) {
     print("MESSAGE AUDIO HANDLER PAUSE");
     Set<MediaAction> actions = {MediaAction.seek};
@@ -44,6 +45,7 @@ class CarbonAudioPlayer extends BaseAudioHandler
     return _player.pause();
   }
 
+  ///
   Future<void> stop({bool hideControls = false}) async {
     print("MESSAGE AUDIO HANDLER STOP");
     Set<MediaAction> actions = {MediaAction.seek};
@@ -56,14 +58,17 @@ class CarbonAudioPlayer extends BaseAudioHandler
     return _player.stop();
   }
 
+  ///
   Future<void> skipToNext() async {
     print("MESSAGE AUDIO HANDLER NEXT");
   }
 
+  ///
   Future<void> skipToPrevious() async {
     print("MESSAGE AUDIO HANDLER PREV");
   }
 
+  ///
   Future<void> setSpeedWithMedia(double speed, MediaItem? sourceMedia) {
     if (sourceMedia != null) {
       mediaItem.add(sourceMedia);
@@ -71,11 +76,13 @@ class CarbonAudioPlayer extends BaseAudioHandler
     return _player.setSpeed(speed);
   }
 
+  ///
   Future<void> seek(Duration position) {
     print("MESSAGE AUDIO HANDLER seek: ${position.inMilliseconds}");
     return _player.seek(position);
   }
 
+  ///
   Future<void> seekBackward(bool begin) {
     print("MESSAGE AUDIO HANDLER seekBackward: $begin");
     var position = _player.position.inMilliseconds - (10 * 1000);
@@ -85,6 +92,7 @@ class CarbonAudioPlayer extends BaseAudioHandler
     return _player.seek(Duration(milliseconds: position));
   }
 
+  ///
   Future<void> seekForward(bool begin) {
     print("MESSAGE AUDIO HANDLER seekForward $begin");
     var position = _player.position.inMilliseconds + (5 * 1000);
@@ -94,10 +102,12 @@ class CarbonAudioPlayer extends BaseAudioHandler
     return _player.seek(Duration(milliseconds: position));
   }
 
+  ///
   Future<void> skipToQueueItem(int i) async {
     print("skipToQueueItem: $i");
   }
 
+  ///
   List<MediaControl> getControls(bool play) {
     return [
       MediaControl.rewind,
@@ -106,6 +116,7 @@ class CarbonAudioPlayer extends BaseAudioHandler
     ];
   }
 
+  ///
   Future<void> setAudioSource(UriAudioSource uri, {Duration? initialPosition, MediaItem? sourceMedia}) {
     playbackState.add(playbackState.value.copyWith(
       controls: [MediaControl.play],
@@ -120,22 +131,27 @@ class CarbonAudioPlayer extends BaseAudioHandler
     return _player.setAudioSource(uri, initialPosition: initialPosition);
   }
 
+  ///
   Duration getPosition() {
     return _player.position;
   }
 
+  ///
   ProcessingState getProcessingState() {
     return _player.processingState;
   }
 
+  ///
   Stream<Duration?> getDurationStream() {
     return _player.durationStream;
   }
 
+  ///
   Stream<PlaybackEvent> getPlaybackEventStream() {
     return _player.playbackEventStream;
   }
 
+  ///
   void onPlayerStateChanged(PlayerState state) {}
 
   static Future initPlayRecordSession({bool activate = true}) async {
@@ -162,14 +178,17 @@ class CarbonAudioPlayer extends BaseAudioHandler
     }
   }
 
+  ///
   Stream<Duration> getPositionStream() {
     return _player.positionStream;
   }
 
+  ///
   Stream<PlayerState> getPlayerStateStream() {
     return _player.playerStateStream;
   }
 
+  ///
   void registerInputChange() {
     if (Platform.isIOS) {
       var audioChannel = EventChannel('carbonvoice_audio_event');
@@ -177,6 +196,7 @@ class CarbonAudioPlayer extends BaseAudioHandler
     }
   }
 
+  ///
   StreamSubscription? addInputChangeListen(void onData(event)?,
       {Function? onError, void onDone()?, bool? cancelOnError}) {
     return _audioInputStream?.listen(onData, onError: onError, onDone: onDone);

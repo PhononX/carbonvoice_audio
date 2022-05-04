@@ -10,8 +10,13 @@ class PermissionState {
     return this;
   }
 
+  Future<PermissionState> check() async {
+    permissionStatus = await permission.status;
+    return this;
+  }
+
   Future<PermissionState> checkAndRequest() async {
-    if (!await permission.isGranted) {
+    if (this.isAllowed) {
       permissionStatus = await permission.request();
     }
     return this;

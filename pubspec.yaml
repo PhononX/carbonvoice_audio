@@ -1,6 +1,6 @@
 name: carbonvoice_audio
 description: A new flutter plugin project.
-version: 1.1.2
+version: 1.1.3
 homepage: "https://github.com/PhononX/carbonvoice_audio"
 
 environment:
@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  ffmpeg_kit_flutter_audio: ^4.5.1
+  ffmpeg_kit_flutter: ^4.5.1
   flutter_tts: ^3.3.3 # for text to speech
   speech_to_text: ^5.4.2 # for transcriptions
   just_audio: ^0.9.20 #updated for adding earcons
@@ -22,8 +22,10 @@ dependencies:
   permission_handler: ^9.1.0
   wakelock: ^0.5.6
   cv_platform_interface:
-    path: ../cv_platform_interface
+    git: https://github.com/PhononX/carbon-voice-audio.git
+    path: cv_platform_interface
   universal_html: ^2.0.8
+
 
 
 dev_dependencies:

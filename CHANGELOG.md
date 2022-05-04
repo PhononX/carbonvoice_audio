@@ -1,7 +1,24 @@
+## 1.1.3
+
+* Adds models; audio_file, audio_input, audio_state
+  * as well as recorder_ui_state, recorder_state
+* Export policies in case we need to hide internal stuff
+* Audio Context for further management of audio sessions, data flow, etc 
+* Controllers
+  * Recorder [cv_audio_recorder.dart](lib/src/cv_audio_recorder.dart)
+  * Player same as AudioHandler [cv_audio_player.dart](lib/src/cv_audio_player.dart)
+  * AudioRouter (only loads audio device info for now) [cv_audio_router.dart](lib/src/cv_audio_router.dart)
+* New and old Utilities
+  * permissions native/web
+  * file_utils native/web
+  * web specific utils
+
 ## 1.1.2
+
 * Fix the audio input notification event
 
 ## 1.1.1
+
 * Adds web platform
 
 ## 1.1.0

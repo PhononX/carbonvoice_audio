@@ -4,40 +4,83 @@ import 'dart:io';
 import 'package:audio_session/audio_session.dart';
 import 'package:carbonvoice_audio/src/cv_audio_context.dart';
 import 'package:carbonvoice_audio/src/cv_audio_player.dart';
-import 'package:carbonvoice_audio/src/model/audio_file.dart';
-import 'package:carbonvoice_audio/src/utils/permissions/cv_audio_permissions.dart';
-import 'package:carbonvoice_audio/src/utils/web_utils.dart';
+import 'package:carbonvoice_audio/src/model/model.dart';
+import 'package:carbonvoice_audio/src/model/src/recorder_state.dart';
+import 'package:carbonvoice_audio/src/model/src/recorder_ui_state.dart';
+import 'package:carbonvoice_audio/src/utils/src/web_utils.dart';
+import 'package:carbonvoice_audio/src/utils/utils.dart';
 import 'package:cv_platform_interface/cv_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart' as p_interface;
-import 'package:carbonvoice_audio/src/utils/file_utils.dart';
 import 'package:wakelock/wakelock.dart';
 
 class CarbonAudioRecorder {
+  /// [Context]
   CarbonVoiceAudioContext context;
 
-  final ValueNotifier<bool> _isRecording = ValueNotifier<bool>(false);
-
+  /// [Internal variables]
+  /// temp filePath
   late String _filePath;
-  final _recorder = FlutterSoundRecorder();
-  Stream<RecordingDisposition>? onProgress;
-  late ValueNotifier<Duration> _duration = ValueNotifier<Duration>(Duration.zero);
-  // max decibels heard while monitoring recording
-  static double maxDecibels = 10.0;
 
-  // How many bars should be drawn?
-  static const int BARS = 5;
-
-  // List holding decibel level for bars
-  List<double> soundSamples = List.generate(BARS, (index) => 0.0, growable: false);
-
-  // Index for next sound sample - keeps a rolling window of sound samples
-  final ValueNotifier<int> ndxBars = ValueNotifier<int>(0);
-
+  /// time Counter
   final Stopwatch _stopwatch = Stopwatch();
 
+  /// [FlutterSound Recorder]
+  final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
+
+  /// [Streams] and forwarders
+  StreamController<RecorderUIState> recorderUIStateStreamController = StreamController<RecorderUIState>.broadcast();
+
+  StreamController<RecorderState> recorderStateStreamController = StreamController<RecorderState>.broadcast();
+
+  /// passthrough stream of recorder's progress
+  Stream<RecordingDisposition>? onProgress;
+
+  /// input changes
   StreamSubscription? _inputChangeStream;
+
+  /// [Stream getters]
+  Stream<RecorderUIState> get recorderUIStateStream => recorderUIStateStreamController.stream;
+
+  ///
+  Stream<RecorderState> get recorderStateStream => recorderStateStreamController.stream;
+
+  /// [Stream value buffers]
+  RecorderUIState recorderUIState = RecorderUIState();
+
+  ///
+  RecorderState recorderState = RecorderState();
+
+  /// [Other getters]
+  bool get isRecorderActive => _recorder.isRecording;
+
+  ///
+  String get filePath => _filePath;
+
+  ///
+  Stopwatch get stopwatch => _stopwatch;
+
+  /// Stream last value getters
+  // Future<RecorderUIState> get recorderUIState async {
+  //   print("DEBUG: recorderUIState -> get");
+  //   if (recorderUIStateStreamController.isClosed) {
+  //     return RecorderUIState();
+  //   } else {
+  //     var v = await recorderUIStateStreamController.stream.last
+  //     return ;
+  //   }
+  // }
+
+  // Future<RecorderState> get recorderState async {
+  //   print("DEBUG: recorderState -> get");
+  //   if (recorderStateStreamController.isClosed) {
+  //     return RecorderState();
+  //   } else {
+  //     var v = await recorderStateStreamController.stream.last;
+  //     return v;
+  //   }
+  // }
 
   CarbonAudioRecorder._internal({CarbonVoiceAudioContext? allocatedContext})
       : context = allocatedContext ?? CarbonVoiceAudioContext.instance() {
@@ -47,61 +90,147 @@ class CarbonAudioRecorder {
   CarbonAudioRecorder.init({CarbonVoiceAudioContext? allocatedContext})
       : this._internal(allocatedContext: allocatedContext);
 
-  @mustCallSuper
-  void onInit() {}
-
-  @mustCallSuper
-  void onRecordingStarted() {
-    // Reset recording data
-    soundSamples = List.generate(BARS, (index) => 0.0, growable: false);
-    ndxBars.value = 0;
-    maxDecibels = 10.0;
-    _duration = ValueNotifier<Duration>(Duration.zero);
-
-    onProgress = _recorder.onProgress;
-    // Listen in on the audio stream so we can create a waveform of the audio
-    /*_recorder.onProgress!.listen((e) {
-      double? decibels = e.decibels;
-      if (decibels! > maxDecibels) maxDecibels = decibels;
-      soundSamples[ndxBars.value] = decibels;
-      if (++ndxBars.value >= BARS) ndxBars.value = 0;
-
-      //print("Decibels: $decibels or $maxDecibels, ${decibels / maxDecibels}");
-      _duration.value = _stopwatch.elapsed;
-    });
-    */
-  }
-
-  @mustCallSuper
-  void onRelease() {}
-
-  void dispose() async {
-    _recorder.closeRecorder();
-  }
-
   static CarbonAudioRecorder of(CarbonVoiceAudioContext context) {
     CarbonAudioRecorder recorder;
     recorder = CarbonAudioRecorder.init(allocatedContext: context);
     return recorder;
   }
 
-  Future initRecorder() async {
-    pausePlayer();
-    //registerInputChange();
+  /// First method to be called
+  ///
+  /// Initializes streams
+  @mustCallSuper
+  void onInit() {
+    initStreams();
+  }
 
-    var success = (await context.permissions?.microphone.checkAndRequest())?.isAllowed ?? false;
-    await setNonInterruptions(true);
-    if (success) {
-      await openRecorderSession();
-      context.audioRouter?.updateCurrentAudioInput();
-      onRecordingStarted();
-      setSubscriptionDuration(const Duration(milliseconds: 60));
-      startRecording();
-    } else {
-      assert(false, 'Permission denied');
+  ///
+  @mustCallSuper
+  void onRecordingStarted() {
+    onProgress = _recorder.onProgress;
+    initStreams();
+    // Listen in on the audio stream so we can create a waveform of the audio
+    onProgress!.listen((e) async {
+      double? decibels = e.decibels;
+
+      RecorderUIState uiState = recorderUIState;
+      RecorderState state = recorderState;
+      if (decibels! > uiState.maxDecibels) uiState.maxDecibels = decibels;
+      uiState.soundSamples[uiState.ndxBars] = decibels;
+      if (++uiState.ndxBars >= RecorderUIState.BARS) uiState.ndxBars = 0;
+
+      //print("Decibels: $decibels or $maxDecibels, ${decibels / maxDecibels}");
+      uiState.duration = _stopwatch.elapsed;
+      uiState.setTimerCount(state);
+      setUIState(RecorderUIState(
+          duration: uiState.duration,
+          maxDecibels: uiState.maxDecibels,
+          soundSamples: uiState.soundSamples,
+          ndxBars: uiState.ndxBars,
+          timerCount: uiState.timerCount));
+    });
+  }
+
+  ///
+  @mustCallSuper
+  void onRelease() async {
+    stopTimer();
+    await _recorder.stopRecorder();
+    await setNonInterruptions(false);
+    await CarbonAudioPlayer.initPlayRecordSession(activate: true);
+    _inputChangeStream?.cancel();
+    closeStreams();
+  }
+
+  ///
+  @mustCallSuper
+  void onDispose() async {
+    _recorder.closeRecorder();
+    context.reload();
+  }
+
+  ///
+  @mustCallSuper
+  void _onError(Object error) {
+    print("????? AudioInput Error received: $error");
+  }
+
+  ///
+  @mustCallSuper
+  void _onEvent(Object? event) async {
+    print("✅✅✅✅✅ AudioInput Event received: $event");
+    var data = Map<String, dynamic>.from(event as Map<dynamic, dynamic>);
+    context.audioRouter?.updateCurrentAudioInput();
+  }
+
+  ///
+  initStreams({bool recordingStarted = false}) {
+    print("DEBUG: initStreams -> started");
+
+    recorderUIStateStreamController = StreamController<RecorderUIState>.broadcast();
+    recorderStateStreamController = StreamController<RecorderState>.broadcast();
+    recorderUIStateStream.listen((e) {
+      recorderUIState = e;
+    });
+    recorderStateStream.listen((e) {
+      recorderState = e;
+    });
+    setUIState(RecorderUIState());
+    setState(RecorderState(isRecording: recordingStarted));
+
+    print("DEBUG: initStreams -> done");
+  }
+
+  ///
+  Future initRecorder() async {
+    try {
+      pausePlayer();
+      context.reload();
+      //registerInputChange();
+
+      var success = (await context.permissions?.microphone.checkAndRequest())?.isAllowed ?? false;
+      await setNonInterruptions(true);
+      if (success) {
+        await openRecorderSession();
+        context.audioRouter?.updateCurrentAudioInput();
+        onRecordingStarted();
+        // Set rate that audio stream will be sampled for the sound bars
+        setSubscriptionDuration(const Duration(milliseconds: 60));
+        startRecording().then((value) => setState(RecorderState(isRecording: true)));
+      } else {
+        assert(false, 'Permission denied');
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
+  ///
+  void setUIState(RecorderUIState newState) {
+    if (!recorderUIStateStreamController.isClosed && !recorderUIStateStreamController.isPaused) {
+      recorderUIStateStreamController.add(newState);
+    }
+  }
+
+  ///
+  void setState(RecorderState newState) {
+    if (!recorderStateStreamController.isClosed && !recorderStateStreamController.isPaused) {
+      recorderStateStreamController.add(newState);
+    }
+  }
+
+  ///
+  clearState() {
+    if (!recorderUIStateStreamController.isClosed && !recorderUIStateStreamController.isPaused) {
+      recorderUIStateStreamController.add(RecorderUIState());
+    }
+    if (!recorderStateStreamController.isClosed && !recorderStateStreamController.isPaused) {
+      recorderStateStreamController.add(RecorderState());
+    }
+    _stopwatch.reset();
+  }
+
+  ///
   void pausePlayer() {
     /*
     if (context.type == CarbonVoiceContextType.recorder) {
@@ -110,55 +239,79 @@ class CarbonAudioRecorder {
     */
   }
 
+  ///
   setSubscriptionDuration(Duration duration) {
     _recorder.setSubscriptionDuration(duration);
   }
 
+  ///
   Future startRecording() async {
-    if (!kIsWeb) {
-      _filePath = await AudioFile.getFilePath("audio_message", ".aac");
-      await _recorder.startRecorder(
-          audioSource: p_interface.AudioSource.defaultSource,
-          toFile: _filePath,
-          codec: Codec.aacADTS,
-          sampleRate: 44100,
-          bitRate: 96000);
-    } else {
-      final browser = Browser.detectOrNull();
-      // Suported codecs: https://flutter-sound.canardoux.xyz/guides_codec.html
-      var isSafari = browser != null && browser.browser == 'Safari';
-      _filePath = isSafari ? 'audio_message.mp4' : 'audio_message.webm';
-      await _recorder.startRecorder(
-          sampleRate: 44100, bitRate: 96000, codec: isSafari ? Codec.aacMP4 : Codec.opusWebM, toFile: _filePath);
+    try {
+      if (!kIsWeb) {
+        _filePath = await AudioFile.getFilePath("audio_message", ".wav");
+        await _recorder.startRecorder(
+            audioSource: p_interface.AudioSource.defaultSource,
+            toStream: context.getRecorderStreamSink,
+            codec: Codec.pcm16,
+            sampleRate: 44100,
+            bitRate: 96000);
+      } else {
+        final browser = Browser.detectOrNull();
+        var isSafari = browser != null && browser.browser == 'Safari';
+        _filePath = isSafari ? 'audio_message.mp4' : 'audio_message.webm';
+        // Suported codecs: https://flutter-sound.canardoux.xyz/guides_codec.html
+        await _recorder.startRecorder(
+            sampleRate: 44100, bitRate: 96000, codec: isSafari ? Codec.aacMP4 : Codec.opusWebM, toFile: _filePath);
+      }
+      startTimer();
+    } catch (e) {
+      return Future.error(e);
     }
-    startTimer();
   }
 
+  /// [Recorder actions]
   Future stopRecording() async {
+    stopTimer();
     await _recorder.stopRecorder();
     await _recorder.closeRecorder();
+    context.newState = AudioStateStopped();
     await setNonInterruptions(false);
+    clearState();
   }
 
+  ///
   Future stopRecorder() async {
     stopTimer();
     _recorder.stopRecorder();
+    context.newState = AudioStateStopped();
+    clearState();
   }
 
+  ///
   Future pauseRecorder() async {
     stopTimer();
+    context.newState = AudioStatePaused();
     await _recorder.pauseRecorder();
+    setState(RecorderState(isRecording: false));
   }
 
+  ///
   Future resumeRecorder() async {
     startTimer();
     await _recorder.resumeRecorder();
+    setState(RecorderState(isRecording: true));
   }
 
-  Future getRecordURL({required String path}) async {
-    return await _recorder.getRecordURL(path: _filePath);
+  /// [Utils]
+  FutureOr getRecordURL({required String path}) async {
+    if (await context.recorderFile(_filePath) != null) {
+      return await _recorder.getRecordURL(path: (await context.recorderFile(_filePath))!.path);
+    } else {
+      _onError(const FileSystemException('File not found'));
+    }
   }
 
+  ///
   Future openRecorderSession() async {
     await _recorder.openRecorder();
     final session = await AudioSession.instance;
@@ -180,76 +333,44 @@ class CarbonAudioRecorder {
     session.setActive(true);
   }
 
+  ///
   Future setNonInterruptions(bool nonInterruption) async {
-    if (Platform.isIOS && !kIsWeb) {
+    if (!kIsWeb && Platform.isIOS) {
       await CarbonVoiceAudioPlatform.instance.setPrefersNoInterruptionsFromSystemAlerts(nonInterruption);
     }
   }
 
+  ///
   Future releaseRecorder(bool openPlaySession) async {
     onRelease();
-    stopTimer();
-    _recorder.stopRecorder();
-    await setNonInterruptions(false);
-    await CarbonAudioPlayer.initPlayRecordSession(activate: true);
-    _inputChangeStream?.cancel();
   }
 
+  ///
+  closeStreams() {
+    recorderUIStateStreamController.close();
+    recorderStateStreamController.close();
+  }
+
+  ///
   void startTimer() {
     print("DEBUG: TIMER -> startTimer");
-    _isRecording.value = true;
     _stopwatch.start();
     Wakelock.enable();
   }
 
   void stopTimer() {
     print("DEBUG: TIMER -> stopTimer");
-    _isRecording.value = false;
     _stopwatch.stop();
     Wakelock.disable();
-  }
-
-  String get timerCount {
-    var totalSeconds = _duration.value.inSeconds;
-    var minutes = totalSeconds ~/ 60.0;
-    var seconds = totalSeconds - minutes * 60;
-    if (isRecording || _duration.value.inMilliseconds > 0) {
-      return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
-    } else {
-      return "--:--";
-    }
   }
 
   ///  void registerInputChange() {
   ///    _inputChangeStream = CarbonAudioPlayer.of(context).addInputChangeListen(_onEvent, onError: _onError);
   ///  }
 
-  void _onError(Object error) {
-    print("????? AudioInput Error received: $error");
-  }
-
-  void _onEvent(Object? event) async {
-    print("✅✅✅✅✅ AudioInput Event received: $event");
-    var data = Map<String, dynamic>.from(event as Map<dynamic, dynamic>);
-    context.audioRouter?.updateCurrentAudioInput();
-  }
-
-  bool get isRecording => _recorder.isRecording;
-
-  int get ndxBar => ndxBars.value;
-
-  Duration get duration => _duration.value;
-
-  String get filePath => _filePath;
-
-  Future<List<int>> getRecordingBytes() async {
-    CarbonAudioRecorder.of(context).duration;
-    if (kIsWeb) {
-      var url = await _recorder.getRecordURL(path: _filePath);
-      final result = await FileUtils.getFileBytes(url!);
-      return result;
-    } else {
-      return FileUtils.getFileBytes(_filePath);
-    }
+  ///
+  Future<List<int>?> getRecordingBytes() async {
+    final result = !kIsWeb ? await context.recorderBytes() : await FileUtils.getFileBytes(_filePath);
+    return result?.toList();
   }
 }

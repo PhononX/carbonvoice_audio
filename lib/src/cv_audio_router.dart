@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:audio_session/audio_session.dart';
-import 'package:carbonvoice_audio/src/model/audio_input.dart';
+import 'package:carbonvoice_audio/src/model/model.dart';
 import 'package:flutter/foundation.dart';
 
 class CarbonAudioRouter {

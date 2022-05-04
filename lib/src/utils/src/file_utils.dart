@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 class FileUtils {
   static Future<List<int>> getFileBytes(String path) async {
     var file = File(path);
-    return file.readAsBytes();
+    return await file.readAsBytes();
   }
 
   static Future<Uint8List?> getBytesFromWebUrl(String url) async {
