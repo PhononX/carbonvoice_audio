@@ -12,6 +12,19 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
+  ffmpeg_kit_flutter_audio: ^4.5.1
+  flutter_tts: ^3.3.3 # for text to speech
+  speech_to_text: ^5.4.2 # for transcriptions
+  just_audio: ^0.9.20 #updated for adding earcons
+  audio_service: ^0.18.0
+  audio_session: ^0.1.6
+  flutter_sound: ^9.1.7
+  permission_handler: ^9.1.0
+  wakelock: ^0.5.6
+  cv_platform_interface:
+    path: ../cv_platform_interface
+  universal_html: ^2.0.8
+
 
 dev_dependencies:
   flutter_test:
@@ -31,10 +44,6 @@ flutter:
     platforms:
       ios:
         pluginClass: CarbonvoiceAudioPlugin
-      web:
-        pluginClass: CarbonvoiceAudioWeb
-        fileName: carbonvoice_audio_web.dart
-
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

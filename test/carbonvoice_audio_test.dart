@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:carbonvoice_audio/carbonvoice_audio.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('carbonvoice_audio');
@@ -15,9 +14,5 @@ void main() {
 
   tearDown(() {
     channel.setMockMethodCallHandler(null);
-  });
-
-  test('getPlatformVersion', () async {
-    expect(await CarbonvoiceAudio.platformVersion, '42');
   });
 }

@@ -1,10 +1,9 @@
 import 'dart:ffi';
 
+import 'package:carbonvoice_audio/cv_audio.dart';
+import 'package:cv_platform_interface/cv_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
-import 'package:flutter/services.dart';
-import 'package:carbonvoice_audio/carbonvoice_audio.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,8 +29,8 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     // Play sound with url, speed (1.0, 1.5, 2.0, 3.0), position (0 -> 1)
-    Map<Object?, Object?> result = await CarbonvoiceAudio.playPlayer(
-        "https://www.kozco.com/tech/piano2.wav", 1.0, 0.0);
+    Map<Object?, Object?> result =
+        await CarbonVoiceAudioPlatform.instance.playPlayer("https://www.kozco.com/tech/piano2.wav", 1.0, 0.0);
 
     setState(() {
       _result = result.toString();
@@ -42,13 +41,12 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     // Check recording permissions
-    String? recordPermissionState =
-        await CarbonvoiceAudio.getRecordPermissionState;
+    String? recordPermissionState = await CarbonVoiceAudioPlatform.instance.getRecordPermissionState;
 
     if (recordPermissionState == "granted") {
       // Try to start recording
       Map<Object?, Object?> startRecordingSessionResult =
-          await CarbonvoiceAudio.startOrResumeRecording;
+          await CarbonVoiceAudioPlatform.instance.startOrResumeRecording;
 
       if (startRecordingSessionResult.containsKey("success")) {
         // Recording...
@@ -59,12 +57,12 @@ class _MyAppState extends State<MyApp> {
     } else {
       // Request recording permission
       Map<Object?, Object?> requestRecordPermissionResult =
-          await CarbonvoiceAudio.requestRecordPermission;
+          await CarbonVoiceAudioPlatform.instance.requestRecordPermission;
 
       if (requestRecordPermissionResult.containsKey("success")) {
         // Try to start recording
         Map<Object?, Object?> startRecordingSessionResult =
-            await CarbonvoiceAudio.startOrResumeRecording;
+            await CarbonVoiceAudioPlatform.instance.startOrResumeRecording;
 
         if (startRecordingSessionResult.containsKey("success")) {
           // Recording...
@@ -91,8 +89,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> endRecording() async {
     if (!mounted) return;
 
-    Map<Object?, Object?> endRecordingSessionResult =
-        await CarbonvoiceAudio.endRecordingSession;
+    Map<Object?, Object?> endRecordingSessionResult = await CarbonVoiceAudioPlatform.instance.endRecordingSession;
 
     setState(() {
       _result = endRecordingSessionResult.toString();
