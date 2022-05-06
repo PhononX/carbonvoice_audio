@@ -27,7 +27,9 @@ dependencies:
     path: ../
   
   cv_platform_interface:
-    path: ../../cv_platform_interface
+    git:
+      url: https://github.com/PhononX/carbon-voice-audio.git
+      path: cv_platform_interface
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

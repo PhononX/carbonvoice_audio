@@ -49,7 +49,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.1.2"
+    version: "1.1.3"
   characters:
     dependency: transitive
     description:
@@ -102,9 +102,11 @@ packages:
   cv_platform_interface:
     dependency: "direct main"
     description:
-      path: "../../cv_platform_interface"
-      relative: true
-    source: path
+      path: cv_platform_interface
+      ref: HEAD
+      resolved-ref: f52ba96a80e535d702ea330d08a53a26fc25f64e
+      url: "https://github.com/PhononX/carbon-voice-audio.git"
+    source: git
     version: "0.0.1"
   fake_async:
     dependency: transitive

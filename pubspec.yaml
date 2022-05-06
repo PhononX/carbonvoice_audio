@@ -22,8 +22,9 @@ dependencies:
   permission_handler: ^9.1.0
   wakelock: ^0.5.6
   cv_platform_interface:
-    git: https://github.com/PhononX/carbon-voice-audio.git
-    path: cv_platform_interface
+    git:
+      url: https://github.com/PhononX/carbon-voice-audio.git
+      path: cv_platform_interface
   universal_html: ^2.0.8
 
 
