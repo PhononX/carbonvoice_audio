@@ -1,3 +1,7 @@
+## 1.1.4
+
+* Fix missing platform check in audio player on web
+
 ## 1.1.3
 
 * Adds models; audio_file, audio_input, audio_state
