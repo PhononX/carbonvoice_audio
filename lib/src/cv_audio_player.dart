@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -190,7 +191,7 @@ class CarbonAudioPlayer extends BaseAudioHandler
 
   ///
   void registerInputChange() {
-    if (Platform.isIOS) {
+    if (!kIsWeb && Platform.isIOS) {
       var audioChannel = EventChannel('carbonvoice_audio_event');
       _audioInputStream = audioChannel.receiveBroadcastStream();
     }
