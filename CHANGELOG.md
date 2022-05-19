@@ -1,3 +1,9 @@
+## 1.1.5
+
+* Web version of platform dependent code
+* Minor updates on models
+* Speed support for playback
+
 ## 1.1.4
 
 * Fix missing platform check in audio player on web

@@ -1,14 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:carbonvoice_audio/cv_audio.dart';
-import 'package:carbonvoice_audio/src/model/model.dart';
 import 'package:carbonvoice_audio/src/utils/utils.dart';
 import 'package:ffmpeg_kit_flutter/return_code.dart';
-import 'package:file/memory.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 
@@ -98,7 +96,31 @@ class CarbonVoiceAudioContext {
   }
 
   FutureOr<Uint8List?> _toWaveBytes(Uint8List bytes, {int sampleRate = 44100}) async {
-    return await flutterSoundHelper.pcmToWaveBuffer(inputBuffer: bytes, sampleRate: sampleRate);
+    var _input_path = await AudioFile.getFilePath("audio_input", ".raw");
+    var _output_path = await AudioFile.getFilePath("audio_output", ".wav");
+    File file = File(_input_path)..writeAsBytesSync(bytes);
+    final result = await FFmpegKit.execute('-f s16le -ar 44100 -i ${_input_path} ${_output_path}');
+    final returnCode = await result.getReturnCode();
+    if (ReturnCode.isSuccess(returnCode)) {
+      var bytes = File(_output_path).readAsBytesSync();
+      print('===========');
+      var original = base64.encode(file.readAsBytesSync());
+      print(original);
+      print('===========');
+      var converted = base64.encode(bytes);
+      print(converted);
+      return bytes;
+    } else if (ReturnCode.isCancel(returnCode)) {
+      // CANCEL
+      return null;
+    } else {
+      // The stack trace if FFmpegKit fails to run a command
+      final failStackTrace = await result.getFailStackTrace();
+
+      // The list of logs generated for this execution
+      final logs = await result.getLogs();
+      return null;
+    }
   }
 
   FutureOr<Uint8List?> _toAAC_ADTC(Uint8List bytes, {int sampleRate = 44100}) async {
@@ -139,15 +161,6 @@ class CarbonVoiceAudioContext {
       return null;
     }
   }
-
-  FutureOr<File?> recorderFile(String path) async => !kIsWeb
-      ? recorderBytes() != null
-          ? (File(path)..writeAsBytesSync((await recorderBytes())!))
-          : null
-      : File(path);
-
-  FutureOr<File?> playbackFile(String path) async =>
-      playbackBytes() != null ? (File(path)..writeAsBytesSync((await playbackBytes())!)) : null;
 
   reload() {
     switch (type) {

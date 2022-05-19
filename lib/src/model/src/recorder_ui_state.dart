@@ -5,6 +5,7 @@ import 'package:carbonvoice_audio/src/model/src/recorder_state.dart';
 class RecorderUIState {
   RecorderUIState({
     this.maxDecibels = 10,
+    this.decibels = 0,
     this.duration = Duration.zero,
     List<double>? soundSamples,
     this.ndxBars = 0,
@@ -19,6 +20,9 @@ class RecorderUIState {
 
   /// max decibels heard while monitoring recording
   double maxDecibels;
+
+  /// decibels heard while monitoring recording
+  double decibels;
 
   /// duration
   Duration duration;

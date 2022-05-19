@@ -2,7 +2,9 @@ class AudioInput {
   String? name;
   String? port;
 
-  static AudioInput get none => AudioInput(name: "Unknown", port: "Unknown");
+  static const DEFAULT_MIC = "DEFAULT";
 
-  AudioInput({this.name, this.port});
+  static AudioInput get none => AudioInput(name: DEFAULT_MIC, port: DEFAULT_MIC);
+
+  AudioInput({this.name = DEFAULT_MIC, this.port = DEFAULT_MIC});
 }

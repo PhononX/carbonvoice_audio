@@ -117,18 +117,18 @@ class CarbonAudioPlayer extends BaseAudioHandler
     ];
   }
 
-  ///
-  Future<void> setAudioSource(UriAudioSource uri, {Duration? initialPosition, MediaItem? sourceMedia}) {
+  Future<void> setAudioSource(UriAudioSource uri,
+      {Duration? initialPosition, MediaItem? sourceMedia, double speed = 1.0}) {
     playbackState.add(playbackState.value.copyWith(
-      controls: [MediaControl.play],
-      updatePosition: _player.position,
-      processingState: AudioProcessingState.loading,
-    ));
+        controls: [MediaControl.play],
+        updatePosition: _player.position,
+        processingState: AudioProcessingState.loading,
+        speed: speed));
 
     if (sourceMedia != null) {
       mediaItem.add(sourceMedia);
     }
-
+    _player.setSpeed(speed);
     return _player.setAudioSource(uri, initialPosition: initialPosition);
   }
 

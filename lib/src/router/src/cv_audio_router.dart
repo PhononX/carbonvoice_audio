@@ -3,22 +3,19 @@ import 'dart:io';
 
 import 'package:audio_session/audio_session.dart';
 import 'package:carbonvoice_audio/src/model/model.dart';
+import 'package:carbonvoice_audio/src/router/router.dart';
 import 'package:flutter/foundation.dart';
 
-class CarbonAudioRouter {
-  ValueNotifier<AudioInput> audioInput = ValueNotifier<AudioInput>(AudioInput.none);
-
-  CarbonAudioRouter({required AudioInput audioInput}) {
-    this.audioInput.value = audioInput;
-  }
+class CarbonAudioRouter extends CarbonAudioRouterInterface {
+  CarbonAudioRouter({AudioInput? audioInput}) : super(audioInput: audioInput);
 
   static Future<CarbonAudioRouter> load() async {
-    return CarbonAudioRouter(audioInput: await loadCurrentAudioInput());
+    return await CarbonAudioRouter()
+      ..loadCurrentAudioInput();
   }
 
-  Future updateCurrentAudioInput() async => audioInput.value = await loadCurrentAudioInput();
-
-  static FutureOr<AudioInput> loadCurrentAudioInput() async {
+  @override
+  FutureOr<AudioInput> loadCurrentAudioInput() async {
     if (!(kIsWeb || !Platform.isIOS)) {
       late AudioInput _tempInput;
       AVAudioSession avSession = AVAudioSession();
@@ -34,15 +31,4 @@ class CarbonAudioRouter {
     }
     return AudioInput.none;
   }
-
-  String? getAudioInputName() {
-    return audioInput.value.name;
-  }
-
-  // TODO: implement in player
-  /* 
-  void registerInputChange() {
-    _inputChangeStream = _audioPlayerHandler.addInputChangeListen(_onEvent, onError: _onError);
-  }
-  */
 }
