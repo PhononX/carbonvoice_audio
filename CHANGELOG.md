@@ -1,3 +1,7 @@
+## 1.1.6
+
+* adds base android platform (kotlin)
+
 ## 1.1.5
 
 * Web version of platform dependent code

@@ -1,6 +1,6 @@
 name: carbonvoice_audio
 description: A new flutter plugin project.
-version: 1.1.5
+version: 1.1.6
 homepage: "https://github.com/PhononX/carbonvoice_audio"
 
 environment:
@@ -46,6 +46,9 @@ flutter:
   # adding or updating assets for this project.
   plugin:
     platforms:
+      android:
+        package: com.phononx.carbonvoice_audio
+        pluginClass: CarbonvoiceAudioPlugin
       ios:
         pluginClass: CarbonvoiceAudioPlugin
   # To add assets to your plugin package, add an assets section, like this:
