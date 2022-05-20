@@ -1,6 +1,6 @@
 name: carbonvoice_audio
 description: A new flutter plugin project.
-version: 1.1.6
+version: 1.1.7
 homepage: "https://github.com/PhononX/carbonvoice_audio"
 
 environment:
@@ -25,6 +25,7 @@ dependencies:
   cv_platform_interface:
     git:
       url: https://github.com/PhononX/carbon-voice-audio.git
+      ref: 1.0.3
       path: cv_platform_interface
   universal_html: ^2.0.8
 

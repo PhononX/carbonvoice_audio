@@ -312,7 +312,7 @@ abstract class RecorderInterface {
   ///
   Future setNonInterruptions(bool nonInterruption) async {
     if (!kIsWeb && Platform.isIOS) {
-      await CarbonVoiceAudioPlatform.instance.setPrefersNoInterruptionsFromSystemAlerts(nonInterruption);
+      await AudioInterface.instance.setPrefersNoInterruptionsFromSystemAlerts(nonInterruption);
     }
   }
 

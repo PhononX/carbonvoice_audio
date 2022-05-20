@@ -2,8 +2,8 @@ export 'src/cv_audio_router.dart' if (dart.library.html) 'src/cv_audio_router_we
 
 import 'dart:async';
 
-import 'package:carbonvoice_audio/src/model/model.dart';
 import 'package:carbonvoice_audio/src/router/router.dart';
+import 'package:cv_platform_interface/cv_platform_interface.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 

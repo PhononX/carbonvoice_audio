@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
 
     // Play sound with url, speed (1.0, 1.5, 2.0, 3.0), position (0 -> 1)
     Map<Object?, Object?> result =
-        await CarbonVoiceAudioPlatform.instance.playPlayer("https://www.kozco.com/tech/piano2.wav", 1.0, 0.0);
+        await PlayerAudioInterface.instance.playPlayer("https://www.kozco.com/tech/piano2.wav", 1.0, 0.0);
 
     setState(() {
       _result = result.toString();
@@ -41,12 +41,11 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     // Check recording permissions
-    String? recordPermissionState = await CarbonVoiceAudioPlatform.instance.getRecordPermissionState;
+    String? recordPermissionState = await RecorderAudioInterface.instance.getRecordPermissionState;
 
     if (recordPermissionState == "granted") {
       // Try to start recording
-      Map<Object?, Object?> startRecordingSessionResult =
-          await CarbonVoiceAudioPlatform.instance.startOrResumeRecording;
+      Map<Object?, Object?> startRecordingSessionResult = await RecorderAudioInterface.instance.startOrResumeRecording;
 
       if (startRecordingSessionResult.containsKey("success")) {
         // Recording...
@@ -57,12 +56,12 @@ class _MyAppState extends State<MyApp> {
     } else {
       // Request recording permission
       Map<Object?, Object?> requestRecordPermissionResult =
-          await CarbonVoiceAudioPlatform.instance.requestRecordPermission;
+          await RecorderAudioInterface.instance.requestRecordPermission;
 
       if (requestRecordPermissionResult.containsKey("success")) {
         // Try to start recording
         Map<Object?, Object?> startRecordingSessionResult =
-            await CarbonVoiceAudioPlatform.instance.startOrResumeRecording;
+            await RecorderAudioInterface.instance.startOrResumeRecording;
 
         if (startRecordingSessionResult.containsKey("success")) {
           // Recording...
@@ -89,7 +88,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> endRecording() async {
     if (!mounted) return;
 
-    Map<Object?, Object?> endRecordingSessionResult = await CarbonVoiceAudioPlatform.instance.endRecordingSession;
+    Map<Object?, Object?> endRecordingSessionResult = await RecorderAudioInterface.instance.endRecordingSession;
 
     setState(() {
       _result = endRecordingSessionResult.toString();

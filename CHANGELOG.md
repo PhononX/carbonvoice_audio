@@ -1,3 +1,9 @@
+## Minor imports Fix 1.1.7
+
+* sets default cv_platform_interface version to 1.0.3
+* fixes imports
+
+
 ## 1.1.6
 
 * adds base android platform (kotlin)
