@@ -1,3 +1,6 @@
+## 1.1.3
+* Fixes protocol conformances
+
 ## 1.1.2
 * Fix the audio input notification event
 

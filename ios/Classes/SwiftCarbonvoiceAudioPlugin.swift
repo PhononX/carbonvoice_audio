@@ -37,7 +37,6 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
         switch call.method {
 
             // MARK: - AudioController
-
         case "getCurrentInputPortName":
             result(audioController.getCurrentInput()?.portName ?? nil)
 
@@ -66,6 +65,39 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
             result(["success": "true"])
 
             // MARK: - PlayerController
+        case "setSubscriptionDurationForPlayer":
+            guard let arguments = call.arguments as? [String: Any], let duration = arguments["duration"] as? Int else {
+                result(["error": "missing arguments for setSubscriptionDurationForPlayer"])
+                return
+            }
+            playerController.setSubscriptionFrequency(seconds: duration)
+            result(["success": "true"])
+
+        case "getPosition":
+            result(playerController.getCurrentTimeInSeconds() ?? nil)
+
+        case "getCurrentState":
+            var dictionary = [String: Any]()
+
+            let playerInfo = playerController.playerInfo
+
+            if let percentage = playerInfo.percentage {
+                dictionary["percentage"] = percentage
+            }
+
+            if let duration = playerInfo.duration {
+                dictionary["duration"] = duration
+            }
+
+            if let isPlaying = playerInfo.isPlaying {
+                dictionary["playbackState"] = (isPlaying ? "playing" : "paused")
+            }
+
+            if let playbackSpeed = playerInfo.playbackSpeed {
+                dictionary["playbackSpeed"] = playbackSpeed
+            }
+
+            result(["success": dictionary])
 
         case "getPlayerCurrentTimeInSeconds":
             result(playerController.getCurrentTimeInSeconds() ?? nil)
@@ -111,7 +143,7 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
                 let urlString = arguments["url"] as? String,
                 let rate = arguments["rate"] as? Double,
                 let position = arguments["position"] as? Double else {
-                    result(["error": "missing arguments for playPlayer"])
+                result(["error": "missing arguments for playPlayer"])
                 return
             }
 
@@ -130,6 +162,13 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
             }
 
             // MARK: - RecorderController
+        case "setSubscriptionDurationForRecorder":
+            guard let arguments = call.arguments as? [String: Any], let duration = arguments["duration"] as? Int else {
+                result(["error": "missing arguments for setSubscriptionDurationForRecorder"])
+                return
+            }
+            recorderController.setSubscriptionFrequency(seconds: duration)
+            result(["success": "true"])
 
         case "requestRecordPermission":
             recorderController.requestRecordPermission { granted in
@@ -232,6 +271,28 @@ extension SwiftCarbonvoiceAudioPlugin: AudioControllerDelegate {
 // MARK: - PlayerControllerDelegate
 
 extension SwiftCarbonvoiceAudioPlugin: PlayerControllerDelegate {
+    public func playerInfoDidUpdate(_ playerInfo: PlayerInfo) {
+        var dictionary = [String: Any]()
+
+        if let percentage = playerInfo.percentage {
+            dictionary["percentage"] = percentage
+        }
+
+        if let duration = playerInfo.duration {
+            dictionary["duration"] = duration
+        }
+
+        if let isPlaying = playerInfo.isPlaying {
+            dictionary["playbackState"] = (isPlaying ? "playing" : "paused")
+        }
+
+        if let playbackSpeed = playerInfo.playbackSpeed {
+            dictionary["playbackSpeed"] = playbackSpeed
+        }
+
+        eventSink?(["getPlaybackState": dictionary])
+    }
+
     public func timelineDidChange(timePlayed: String, timeRemaining: String, percentage: Double) {
         eventSink?(["timelineDidChange": ["timePlayed": timePlayed,
                                           "timeRemaining": timeRemaining,
@@ -251,6 +312,18 @@ extension SwiftCarbonvoiceAudioPlugin: PlayerControllerDelegate {
 // MARK: - RecorderControllerDelegate
 
 extension SwiftCarbonvoiceAudioPlugin: RecorderControllerDelegate {
+    public func recordingInfoUpdate(decibels: Float?, duration: Int) {
+        var dictionary = [String: Any]()
+
+        if let decibels = decibels {
+            dictionary["decibels"] = decibels
+        }
+
+        dictionary["duration"] = duration
+
+        eventSink?(["onProgress": dictionary])
+    }
+
     public func recordedTimeDidChange(secondsRecorded: Int) {
         eventSink?(["recordedTimeDidChange": ["secondsRecorded": secondsRecorded]])
     }

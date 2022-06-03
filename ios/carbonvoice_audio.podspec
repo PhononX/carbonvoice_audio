@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'carbonvoice_audio'
-  s.version          = '1.0.5'
+  s.version          = '1.0.6'
   s.summary          = 'Flutter audio plugin'
   s.description      = 'Flutter audio plugin interface'
   s.homepage         = 'https://github.com/PhononX/carbonvoice_audio'
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'CarbonVoiceAudio', '~> 1.1.0'
+  s.dependency 'CarbonVoiceAudio', '~> 1.1.7'
   s.platform = :ios, '11.0'
 
   # Flutter.framework does not contain a i386 slice.
