@@ -1,3 +1,6 @@
+## 1.1.4
+* iOS: create the event channel with the registrar's messenger instead of the window's root view controller, so the plugin registers under the UIScene life cycle (required by the iOS 27 SDK). `configureStreamHandler()` now takes the messenger.
+
 ## 1.1.3
 * Fixes protocol conformances
 

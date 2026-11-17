@@ -16,7 +16,6 @@ public class SwiftCarbonvoiceAudioPlugin: NSObject {
         audioController.delegate = self
         playerController.delegate = self
         recorderController.delegate = self
-        configureStreamHandler()
     }
 }
 
@@ -31,6 +30,7 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
         let channel = FlutterMethodChannel(name: channelMethodName, binaryMessenger: registrar.messenger())
         let instance = SwiftCarbonvoiceAudioPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
+        instance.configureStreamHandler(messenger: registrar.messenger())
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -227,13 +227,11 @@ extension SwiftCarbonvoiceAudioPlugin: FlutterPlugin {
 // MARK: FlutterStreamHandler
 
 extension SwiftCarbonvoiceAudioPlugin: FlutterStreamHandler {
-    public func configureStreamHandler() {
-        guard let controller = UIApplication.shared.windows.first?.rootViewController as? FlutterViewController else {
-            fatalError("rootViewController is not type FlutterViewController")
-        }
-
+    /// Uses the registrar's messenger: under the UIScene life cycle plugins register before any
+    /// window exists, so looking the FlutterViewController up through the window crashed at launch.
+    public func configureStreamHandler(messenger: FlutterBinaryMessenger) {
         let notificationChannel = FlutterEventChannel(name: SwiftCarbonvoiceAudioPlugin.channelEventName,
-                                                      binaryMessenger: controller.binaryMessenger)
+                                                      binaryMessenger: messenger)
 
         notificationChannel.setStreamHandler(self)
     }
